@@ -4,9 +4,10 @@
 #include "Map.h"
 #include "glm/glm.hpp"
 #include "ShaderProgram.h"
+
 enum EntityType { PLATFORM, PLAYER, ENEMY  };
-enum AIType     { WALKER, GUARD            };
-enum AIState    { WALKING, IDLE, ATTACKING };
+enum AIType     { WALKER, GUARD, FLYER     };
+enum AIState    { WALKING, IDLE, ATTACKING, HOVERING };
 
 
 enum AnimationDirection { LEFT, RIGHT, UP, DOWN };
@@ -90,6 +91,7 @@ public:
 
     void ai_activate(Entity *player);
     void ai_walk();
+    void ai_fly();
     void ai_guard(Entity *player);
     
     void normalise_movement() { m_movement = glm::normalize(m_movement); }

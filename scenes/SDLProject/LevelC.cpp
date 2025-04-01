@@ -1,7 +1,7 @@
 #include "LevelC.h"
 #include "Utility.h"
 
-#define LEVEL_C_WIDTH 14
+#define LEVEL_C_WIDTH 27
 #define LEVEL_C_HEIGHT 8
 #define LEVEL3_ENEMY_COUNT 2
 
@@ -12,15 +12,16 @@ constexpr char SPRITESHEET_FILEPATHC[] = "assets/george_0.png",
 
 unsigned int LEVEL_C_DATA[] =
 {
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 0, 2, 0, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 2, 2, 2
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2,
+    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2,
 };
+
 
 LevelC::~LevelC()
 {
@@ -80,12 +81,13 @@ void LevelC::initialise()
     m_game_state.enemies[i] =  Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, GUARD, IDLE);
     }
 
-
+    //enemy 1
     m_game_state.enemies[0].set_position(glm::vec3(8.0f, 0.0f, 0.0f));
     m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
     m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
     
-    m_game_state.enemies[1].set_position(glm::vec3(4.0f, 0.0f, 0.0f));
+    //enemy 2
+    m_game_state.enemies[1].set_position(glm::vec3(15.0f, 0.0f, 0.0f));
     m_game_state.enemies[1].set_movement(glm::vec3(0.0f));
     m_game_state.enemies[1].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
 
@@ -108,6 +110,8 @@ void LevelC::update(float delta_time)
     if (m_game_state.player->check_enemy_collision(m_game_state.enemies, LEVEL3_ENEMY_COUNT)) {
             // Player lost a life from enemy collision
             // You could add visual effects or sounds here
+        Mix_PlayChannel(-1,m_game_state.death_sfx, 0);
+
         }
     
     for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++)

@@ -24,6 +24,10 @@ void Entity::ai_activate(Entity *player)
         case GUARD:
             ai_guard(player);
             break;
+        
+        case FLYER:
+            ai_fly();
+            break;
             
         default:
             break;
@@ -33,6 +37,22 @@ void Entity::ai_activate(Entity *player)
 void Entity::ai_walk()
 {
     m_movement = glm::vec3(-1.0f, 0.0f, 0.0f);
+}
+
+void Entity::ai_fly()
+{
+    float hover_amplitude = 2.0f;
+    float hover_speed = 1.0f;
+    
+    m_movement.x = sinf(SDL_GetTicks() * 0.001f * hover_speed) * hover_amplitude;
+    
+    if (glm::length(m_movement) > 0)
+    {
+        m_movement = glm::normalize(m_movement);
+    }
+    
+    
+    m_ai_state = HOVERING;
 }
 
 void Entity::ai_guard(Entity *player)

@@ -1,7 +1,7 @@
 #include "LevelB.h"
 #include "Utility.h"
 
-#define LEVEL_B_WIDTH 14
+#define LEVEL_B_WIDTH 27
 #define LEVEL_B_HEIGHT 8
 #define LEVEL2_ENEMY_COUNT 1
 
@@ -12,14 +12,14 @@ constexpr char SPRITESHEET_FILEPATHB[] = "assets/george_0.png",
 
 unsigned int LEVEL_B_DATA[] =
 {
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 0, 2, 0, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 2, 2, 2
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2,
+    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2,
 };
 
 LevelB::~LevelB()
@@ -106,8 +106,9 @@ void LevelB::update(float delta_time)
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, LEVEL2_ENEMY_COUNT, m_game_state.map);
     
     if (m_game_state.player->check_enemy_collision(m_game_state.enemies, LEVEL2_ENEMY_COUNT)) {
-            // Player lost a life from enemy collision
-            // You could add visual effects or sounds here
+            
+        Mix_PlayChannel(-1,m_game_state.death_sfx, 0);
+
         }
     
     for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++)

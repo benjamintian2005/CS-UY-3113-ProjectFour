@@ -1,7 +1,7 @@
 #include "LevelA.h"
 #include "Utility.h"
 
-#define LEVEL_A_WIDTH 14
+#define LEVEL_A_WIDTH 27
 #define LEVEL_A_HEIGHT 8
 #define LEVEL1_ENEMY_COUNT 1
 
@@ -12,14 +12,14 @@ constexpr char SPRITESHEET_FILEPATHA[] = "assets/george_0.png",
 
 unsigned int LEVEL_A_DATA[] =
 {
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 };
 
 LevelA::~LevelA()
@@ -80,13 +80,13 @@ void LevelA::initialise()
 
     for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++)
     {
-    m_game_state.enemies[i] =  Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, WALKER, IDLE);
+    m_game_state.enemies[i] =  Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, FLYER, HOVERING);
     }
 
 
-    m_game_state.enemies[0].set_position(glm::vec3(8.0f, 0.0f, 0.0f));
-    m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
-    m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+    m_game_state.enemies[0].set_position(glm::vec3(7.0f, -2.0f, 0.0f));
+    //m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
+    //m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
 
     /**
      BGM and SFX
@@ -114,6 +114,7 @@ void LevelA::update(float delta_time)
 {
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, LEVEL1_ENEMY_COUNT, m_game_state.map);
     
+    std::cout <<m_game_state.player->get_position().y  << std::endl;
     if (m_game_state.player->get_position().y < -10.0f)
     {
         m_game_state.player->lose_life();
@@ -122,7 +123,7 @@ void LevelA::update(float delta_time)
         
     }
     if (m_game_state.player->check_enemy_collision(m_game_state.enemies, LEVEL1_ENEMY_COUNT)) {
-            
+        Mix_PlayChannel(-1,m_game_state.death_sfx, 0);
     }
     
     if (m_game_state.player->get_position().x > 8.0f)
