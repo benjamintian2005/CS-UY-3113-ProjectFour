@@ -301,6 +301,8 @@ void update()
             }
             else if (g_current_scene == g_level_c && ((LevelC*)g_current_scene)->is_completed()) {
                 // Game finished - back to menu or show victory screen
+                Mix_PlayChannel(-1, g_current_scene->get_state().win_sfx, 0);
+
                 switch_to_scene(g_game_over_win);
             }
         }

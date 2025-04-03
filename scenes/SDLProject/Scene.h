@@ -31,6 +31,8 @@ struct GameState
     Mix_Chunk *jump_sfx;
     Mix_Chunk *death_sfx;
     Mix_Chunk *switch_sfx;
+    Mix_Chunk *win_sfx;
+
 
 
     

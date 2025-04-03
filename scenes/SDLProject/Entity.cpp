@@ -52,6 +52,7 @@ void Entity::ai_fly()
     }
     
     
+    
     m_ai_state = HOVERING;
 }
 
@@ -181,6 +182,14 @@ void const Entity::check_collision_y(Entity *collidable_entities, int collidable
         
         if (check_collision(collidable_entity))
         {
+            if(collidable_entity->m_entity_type == ENEMY && m_entity_type == PLAYER)
+
+            {
+                lose_life();
+                m_position = glm::vec3(5.0f, 0.0f, 0.0f);
+                m_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+                
+            }
             float y_distance = fabs(m_position.y - collidable_entity->m_position.y);
             float y_overlap = fabs(y_distance - (m_height / 2.0f) - (collidable_entity->m_height / 2.0f));
             if (m_velocity.y > 0)
@@ -212,6 +221,14 @@ void const Entity::check_collision_x(Entity *collidable_entities, int collidable
         {
             float x_distance = fabs(m_position.x - collidable_entity->m_position.x);
             float x_overlap = fabs(x_distance - (m_width / 2.0f) - (collidable_entity->m_width / 2.0f));
+            if(collidable_entity->m_entity_type == ENEMY && m_entity_type == PLAYER)
+
+            {
+                lose_life();
+                m_position = glm::vec3(5.0f, 0.0f, 0.0f);
+                m_movement = glm::vec3(0.0f, 0.0f, 0.0f);
+                
+            }
             if (m_velocity.x > 0)
             {
                 m_position.x     -= x_overlap;
@@ -318,6 +335,7 @@ bool Entity::check_enemy_collision(Entity *enemies, int enemy_count)
     {
         if (check_collision(&enemies[i]))
         {
+            std::cout << "collision"<< std::endl;
             lose_life();
             // Reset player position after losing a life
             m_position = glm::vec3(5.0f, 0.0f, 0.0f);

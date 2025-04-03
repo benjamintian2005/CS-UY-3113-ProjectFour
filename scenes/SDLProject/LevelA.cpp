@@ -6,9 +6,9 @@
 #define LEVEL1_ENEMY_COUNT 1
 
 
-constexpr char SPRITESHEET_FILEPATHA[] = "assets/george_0.png",
+constexpr char SPRITESHEET_FILEPATHA[] = "assets/main.png",
            PLATFORM_FILEPATHA[]    = "assets/platformPack_tile027.png",
-           ENEMY_FILEPATHA[]       = "assets/soph.png";
+           ENEMY_FILEPATHA[]       = "assets/crab1.png";
 
 unsigned int LEVEL_A_DATA[] =
 {
@@ -17,9 +17,9 @@ unsigned int LEVEL_A_DATA[] =
     3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1,
+    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2,
+    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2, 2, 0, 0, 2,
 };
 
 LevelA::~LevelA()
@@ -33,17 +33,17 @@ LevelA::~LevelA()
 
 void LevelA::initialise()
 {
-    GLuint map_texture_id = Utility::load_texture("assets/tileset.png");
-    m_game_state.map = new Map(LEVEL_A_WIDTH, LEVEL_A_HEIGHT, LEVEL_A_DATA, map_texture_id, 1.0f, 4, 1);
+    GLuint map_texture_id = Utility::load_texture("assets/world_tileset.png");
+    m_game_state.map = new Map(LEVEL_A_WIDTH, LEVEL_A_HEIGHT, LEVEL_A_DATA, map_texture_id, 1.0f, 16, 16);
     
     GLuint player_texture_id = Utility::load_texture(SPRITESHEET_FILEPATHA);
 
     int player_walking_animation[4][4] =
     {
-        { 1, 5, 9, 13 },  // for George to move to the left,
-        { 3, 7, 11, 15 }, // for George to move to the right,
-        { 2, 6, 10, 14 }, // for George to move upwards,
-        { 0, 4, 8, 12 }   // for George to move downwards
+        { 4, 5, 6, 7 },  // for George to move to the left,
+        { 8, 9, 10, 11 }, // for George to move to the right,
+        { 12, 13, 14, 15 }, // for George to move upwards,
+        { 0, 1, 2, 3 }   // for George to move downwards
     };
 
     glm::vec3 acceleration = glm::vec3(0.0f, -4.81f, 0.0f);
@@ -84,7 +84,7 @@ void LevelA::initialise()
     }
 
 
-    m_game_state.enemies[0].set_position(glm::vec3(7.0f, -2.0f, 0.0f));
+    m_game_state.enemies[0].set_position(glm::vec3(9.0f, -3.0f, 0.0f));
     //m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
     //m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
 
@@ -97,9 +97,10 @@ void LevelA::initialise()
     Mix_PlayMusic(m_game_state.bgm, -1);
     Mix_VolumeMusic(50.0f);
     
-    m_game_state.jump_sfx = Mix_LoadWAV("assets/bounce.wav");
+    m_game_state.jump_sfx = Mix_LoadWAV("assets/boing.mp3");
     m_game_state.death_sfx = Mix_LoadWAV("assets/death.mp3");
     m_game_state.switch_sfx = Mix_LoadWAV("assets/bruh.mp3");
+    m_game_state.win_sfx =Mix_LoadWAV("assets/yay.mp3");
 
 
 }
@@ -114,9 +115,10 @@ void LevelA::update(float delta_time)
 {
     m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, LEVEL1_ENEMY_COUNT, m_game_state.map);
     
-    std::cout <<m_game_state.player->get_position().y  << std::endl;
     if (m_game_state.player->get_position().y < -10.0f)
     {
+        Mix_PlayChannel(-1,m_game_state.death_sfx, 0);
+
         m_game_state.player->lose_life();
         
         m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
